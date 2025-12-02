@@ -41,6 +41,12 @@ export default function AdminPage() {
   const [editingStudent, setEditingStudent] = useState<StudentWithRank | null>(null);
   const [editingTemplate, setEditingTemplate] = useState<ScoreTemplate | null>(null);
 
+  // 随机点名状态
+  const [showRandomModal, setShowRandomModal] = useState(false);
+  const [isRolling, setIsRolling] = useState(false);
+  const [rollingName, setRollingName] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState<StudentWithRank | null>(null);
+
   const [studentForm, setStudentForm] = useState({ student_no: '', name: '' });
   const [templateForm, setTemplateForm] = useState({ name: '', value: 0, category: '' });
 
@@ -223,6 +229,37 @@ export default function AdminPage() {
     setQuickScoreStudentId(studentId);
     setQuickScoreStudentName(studentName);
     setShowQuickScoreModal(true);
+  };
+
+  // 随机点名函数
+  const startRandomPick = () => {
+    if (students.length === 0) return;
+
+    setShowRandomModal(true);
+    setIsRolling(true);
+    setSelectedStudent(null);
+
+    let count = 0;
+    const maxCount = 20 + Math.floor(Math.random() * 10);
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * students.length);
+      setRollingName(students[randomIndex].name);
+      count++;
+
+      if (count >= maxCount) {
+        clearInterval(interval);
+        const finalIndex = Math.floor(Math.random() * students.length);
+        setSelectedStudent(students[finalIndex]);
+        setRollingName(students[finalIndex].name);
+        setIsRolling(false);
+      }
+    }, 100);
+  };
+
+  const closeRandomModal = () => {
+    setShowRandomModal(false);
+    setSelectedStudent(null);
+    setRollingName('');
   };
 
   const handleApplyTemplateToStudent = async (template: ScoreTemplate) => {
@@ -471,6 +508,15 @@ export default function AdminPage() {
                         onChange={(e) => setStudentSearchKeyword(e.target.value)}
                       />
                     </div>
+                    <button
+                      onClick={startRandomPick}
+                      className="px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-medium hover:shadow-lg hover:shadow-purple-200/50 transition-all flex items-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                      </svg>
+                      随机点名
+                    </button>
                     <button
                       onClick={() => {
                         setEditingStudent(null);
@@ -1296,6 +1342,58 @@ export default function AdminPage() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* 随机点名弹窗 */}
+      {showRandomModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl text-center">
+            {/* 标题 */}
+            <div className="mb-6">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-200/50">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800">随机点名</h3>
+            </div>
+
+            {/* 滚动名字 */}
+            <div className={`py-8 px-4 rounded-2xl mb-6 ${isRolling ? 'bg-gradient-to-r from-purple-100 to-pink-100' : 'bg-gradient-to-r from-emerald-100 to-teal-100'}`}>
+              <div className={`text-5xl font-bold ${isRolling ? 'text-purple-600 animate-pulse' : 'text-emerald-600'}`}>
+                {rollingName || '准备中...'}
+              </div>
+              {selectedStudent && !isRolling && (
+                <div className="mt-4 space-y-2">
+                  <div className="text-slate-500">学号: {selectedStudent.student_no}</div>
+                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm" style={{ backgroundColor: selectedStudent.rank_color + '20', color: selectedStudent.rank_color }}>
+                    {selectedStudent.rank_icon} {selectedStudent.rank_name}
+                  </div>
+                  <div className="text-slate-600">当前积分: <span className="font-bold text-lg">{selectedStudent.score}</span></div>
+                </div>
+              )}
+            </div>
+
+            {/* 按钮 */}
+            <div className="flex gap-3">
+              {!isRolling && (
+                <button
+                  onClick={startRandomPick}
+                  className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-xl hover:shadow-lg transition-all"
+                >
+                  再来一次
+                </button>
+              )}
+              <button
+                onClick={closeRandomModal}
+                disabled={isRolling}
+                className={`flex-1 py-3 rounded-xl font-medium transition-all ${isRolling ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+              >
+                {isRolling ? '抽取中...' : '关闭'}
+              </button>
+            </div>
           </div>
         </div>
       )}
