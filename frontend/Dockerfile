@@ -1,6 +1,9 @@
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
+
+# 设置 npm 镜像（国内加速）
+RUN npm config set registry https://registry.npmmirror.com
 
 # 安装依赖
 COPY package*.json ./
@@ -16,7 +19,7 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 RUN npm run build
 
 # 运行镜像
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
