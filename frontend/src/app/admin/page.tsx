@@ -36,6 +36,8 @@ export default function AdminPage() {
   const [showQuickScoreModal, setShowQuickScoreModal] = useState(false);
   const [quickScoreStudentId, setQuickScoreStudentId] = useState<number | null>(null);
   const [quickScoreStudentName, setQuickScoreStudentName] = useState('');
+  const [quickScoreValue, setQuickScoreValue] = useState(0);
+  const [quickScoreReason, setQuickScoreReason] = useState('');
   const [editingRankId, setEditingRankId] = useState<number | null>(null);
   const [editingRankScore, setEditingRankScore] = useState<number>(0);
   const [editingStudent, setEditingStudent] = useState<StudentWithRank | null>(null);
@@ -228,7 +230,33 @@ export default function AdminPage() {
   const openQuickScoreModal = (studentId: number, studentName: string) => {
     setQuickScoreStudentId(studentId);
     setQuickScoreStudentName(studentName);
+    setQuickScoreValue(0);
+    setQuickScoreReason('');
     setShowQuickScoreModal(true);
+  };
+
+  const closeQuickScoreModal = () => {
+    setShowQuickScoreModal(false);
+    setQuickScoreStudentId(null);
+    setQuickScoreStudentName('');
+    setQuickScoreValue(0);
+    setQuickScoreReason('');
+  };
+
+  const handleQuickScoreSubmit = async () => {
+    if (!quickScoreStudentId || quickScoreValue === 0) return;
+    try {
+      await adminApi.modifyScore(password, {
+        student_id: quickScoreStudentId,
+        value: quickScoreValue,
+        reason: quickScoreReason || (quickScoreValue > 0 ? '加分' : '减分'),
+        category: '手动操作',
+      });
+      closeQuickScoreModal();
+      loadAllData();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : '操作失败');
+    }
   };
 
   // 随机点名函数
@@ -260,24 +288,6 @@ export default function AdminPage() {
     setShowRandomModal(false);
     setSelectedStudent(null);
     setRollingName('');
-  };
-
-  const handleApplyTemplateToStudent = async (template: ScoreTemplate) => {
-    if (!quickScoreStudentId) return;
-    try {
-      await adminApi.modifyScore(password, {
-        student_id: quickScoreStudentId,
-        value: template.value,
-        reason: template.name,
-        category: template.category,
-      });
-      setShowQuickScoreModal(false);
-      setQuickScoreStudentId(null);
-      setQuickScoreStudentName('');
-      loadAllData();
-    } catch (error) {
-      alert(error instanceof Error ? error.message : '操作失败');
-    }
   };
 
   const formatDate = (dateStr: string) => {
@@ -426,13 +436,15 @@ export default function AdminPage() {
           <>
             {/* 学生管理 */}
             {activeTab === 'students' && (() => {
-              const filteredStudents = students.filter(
-                (s) =>
-                  s.name.includes(studentSearchKeyword) ||
-                  s.student_no.includes(studentSearchKeyword)
-              );
-              const top3 = filteredStudents.slice(0, 3);
-              const restStudents = filteredStudents.slice(3);
+              const filteredStudents = students
+                .filter(
+                  (s) =>
+                    s.name.includes(studentSearchKeyword) ||
+                    s.student_no.includes(studentSearchKeyword)
+                )
+                .sort((a, b) => a.student_no.localeCompare(b.student_no));
+              const top3 = students.slice(0, 3); // top3 保持按积分排序
+              const restStudents = filteredStudents;
               const totalScore = students.reduce((sum, s) => sum + s.score, 0);
               const avgScore = students.length > 0 ? Math.round(totalScore / students.length) : 0;
 
@@ -1005,17 +1017,13 @@ export default function AdminPage() {
       {/* 快捷加减分弹窗 */}
       {showQuickScoreModal && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-6 w-full max-w-lg shadow-2xl max-h-[80vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between mb-4">
+          <div className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-slate-800">
                 为 <span className="text-blue-600">{quickScoreStudentName}</span> 加减分
               </h3>
               <button
-                onClick={() => {
-                  setShowQuickScoreModal(false);
-                  setQuickScoreStudentId(null);
-                  setQuickScoreStudentName('');
-                }}
+                onClick={closeQuickScoreModal}
                 className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
               >
                 <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1024,76 +1032,61 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <div className="overflow-y-auto flex-1">
-              {/* 加分模板 */}
-              <div className="mb-4">
-                <h4 className="text-sm font-semibold text-emerald-600 mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  加分项目
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {templates.filter(t => t.value > 0).map((template) => (
-                    <button
-                      key={template.id}
-                      onClick={() => handleApplyTemplateToStudent(template)}
-                      className="text-left px-4 py-3 rounded-xl border-2 border-emerald-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-slate-700 text-sm">{template.name}</span>
-                        <span className="font-bold text-emerald-600">+{template.value}</span>
-                      </div>
-                      {template.category && (
-                        <span className="text-xs text-slate-400">{template.category}</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                {templates.filter(t => t.value > 0).length === 0 && (
-                  <div className="text-center py-4 text-slate-400 text-sm">暂无加分模板</div>
-                )}
+            {/* 加减分控制 */}
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <button
+                onClick={() => setQuickScoreValue(v => v - 1)}
+                className="w-14 h-14 rounded-xl bg-red-100 hover:bg-red-200 text-red-600 text-2xl font-bold transition-all flex items-center justify-center"
+              >
+                -
+              </button>
+              <div className={`text-5xl font-bold min-w-[100px] text-center ${quickScoreValue > 0 ? 'text-emerald-600' : quickScoreValue < 0 ? 'text-red-600' : 'text-slate-400'}`}>
+                {quickScoreValue > 0 ? '+' : ''}{quickScoreValue}
               </div>
-
-              {/* 减分模板 */}
-              <div>
-                <h4 className="text-sm font-semibold text-red-600 mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-                  </svg>
-                  减分项目
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {templates.filter(t => t.value < 0).map((template) => (
-                    <button
-                      key={template.id}
-                      onClick={() => handleApplyTemplateToStudent(template)}
-                      className="text-left px-4 py-3 rounded-xl border-2 border-red-200 hover:border-red-400 hover:bg-red-50 transition-all"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-slate-700 text-sm">{template.name}</span>
-                        <span className="font-bold text-red-600">{template.value}</span>
-                      </div>
-                      {template.category && (
-                        <span className="text-xs text-slate-400">{template.category}</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                {templates.filter(t => t.value < 0).length === 0 && (
-                  <div className="text-center py-4 text-slate-400 text-sm">暂无减分模板</div>
-                )}
-              </div>
+              <button
+                onClick={() => setQuickScoreValue(v => v + 1)}
+                className="w-14 h-14 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-600 text-2xl font-bold transition-all flex items-center justify-center"
+              >
+                +
+              </button>
             </div>
 
-            <div className="mt-4 pt-4 border-t border-slate-100">
+            {/* 快捷按钮 */}
+            <div className="flex justify-center gap-2 mb-6">
+              {[-5, -3, -1, 1, 3, 5].map(val => (
+                <button
+                  key={val}
+                  onClick={() => setQuickScoreValue(v => v + val)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${val > 0 ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}
+                >
+                  {val > 0 ? '+' : ''}{val}
+                </button>
+              ))}
+            </div>
+
+            {/* 原因输入 */}
+            <div className="mb-6">
+              <input
+                type="text"
+                value={quickScoreReason}
+                onChange={(e) => setQuickScoreReason(e.target.value)}
+                placeholder="原因（可选）"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none text-center"
+              />
+            </div>
+
+            {/* 按钮 */}
+            <div className="flex gap-3">
               <button
-                onClick={() => {
-                  setShowQuickScoreModal(false);
-                  setQuickScoreStudentId(null);
-                  setQuickScoreStudentName('');
-                }}
-                className="w-full py-3 bg-slate-100 text-slate-600 font-medium rounded-xl hover:bg-slate-200 transition-all"
+                onClick={handleQuickScoreSubmit}
+                disabled={quickScoreValue === 0}
+                className={`flex-1 py-3 font-medium rounded-xl transition-all ${quickScoreValue === 0 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:shadow-lg'}`}
+              >
+                提交
+              </button>
+              <button
+                onClick={closeQuickScoreModal}
+                className="flex-1 py-3 bg-slate-100 text-slate-600 font-medium rounded-xl hover:bg-slate-200 transition-all"
               >
                 取消
               </button>
