@@ -108,10 +108,10 @@ export default function Home() {
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
               2025级高一（3）班
             </div>
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent mb-4">
               班级积分排行榜
             </h1>
-            <p className="text-slate-500 text-lg">努力学习，争创佳绩</p>
+            <p className="text-slate-500 text-base md:text-lg">努力学习，争创佳绩</p>
           </div>
 
           {/* 统计卡片 */}
@@ -174,7 +174,7 @@ export default function Home() {
 
       <main className="relative z-10 max-w-6xl mx-auto px-4 pb-12">
         {/* 搜索框和随机点名 */}
-        <div className="mb-8 flex gap-4">
+        <div className="mb-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="relative flex-1">
             <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -182,19 +182,19 @@ export default function Home() {
             <input
               type="text"
               placeholder="搜索学生姓名或学号..."
-              className="w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur-md border border-blue-100 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all shadow-lg shadow-blue-100/30"
+              className="w-full pl-12 pr-4 py-3 sm:py-4 bg-white/70 backdrop-blur-md border border-blue-100 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all shadow-lg shadow-blue-100/30"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
           </div>
           <button
             onClick={startRandomPick}
-            className="px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium rounded-2xl shadow-lg shadow-purple-200/50 hover:shadow-xl transition-all flex items-center gap-2"
+            className="px-6 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium rounded-2xl shadow-lg shadow-purple-200/50 hover:shadow-xl transition-all flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
             </svg>
-            随机点名
+            <span className="sm:inline">随机点名</span>
           </button>
         </div>
 
@@ -264,22 +264,22 @@ export default function Home() {
         )}
 
         {/* 段位说明 */}
-        <div className="mb-8 bg-white/70 backdrop-blur-md rounded-2xl p-6 border border-blue-100 shadow-lg shadow-blue-100/30">
-          <h2 className="text-slate-700 text-lg font-semibold mb-4 flex items-center gap-2">
+        <div className="mb-8 bg-white/70 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-blue-100 shadow-lg shadow-blue-100/30">
+          <h2 className="text-slate-700 text-base sm:text-lg font-semibold mb-4 flex items-center gap-2">
             <svg className="w-5 h-5 text-indigo-500" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
             段位系统
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:flex md:flex-wrap gap-2 sm:gap-3">
             {ranks.map((rank) => (
               <div
                 key={rank.id}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 hover:shadow-md transition-all cursor-default"
+                className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl bg-slate-50 border border-slate-100 hover:shadow-md transition-all cursor-default"
               >
-                <span className="text-2xl">{rank.icon}</span>
+                <span className="text-xl sm:text-2xl">{rank.icon}</span>
                 <div>
-                  <div className="font-semibold" style={{ color: rank.color }}>{rank.name}</div>
+                  <div className="font-semibold text-sm sm:text-base" style={{ color: rank.color }}>{rank.name}</div>
                   <div className="text-slate-400 text-xs">≥{rank.min_score} 分</div>
                 </div>
               </div>
@@ -289,19 +289,19 @@ export default function Home() {
 
         {/* 完整排行榜 */}
         <div className="bg-white/70 backdrop-blur-md rounded-2xl border border-blue-100 shadow-lg shadow-blue-100/30 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50">
-            <h2 className="text-slate-700 text-lg font-semibold flex items-center gap-2">
+          <div className="px-4 sm:px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50">
+            <h2 className="text-slate-700 text-base sm:text-lg font-semibold flex items-center gap-2">
               <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                 <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
               </svg>
               完整排名
             </h2>
-            <span className="text-slate-400 text-sm bg-white px-3 py-1 rounded-full">{filteredStudents.length} 名学生</span>
+            <span className="text-slate-400 text-xs sm:text-sm bg-white px-2 sm:px-3 py-1 rounded-full">{filteredStudents.length} 名学生</span>
           </div>
 
-          {/* 表头 */}
-          <div className="grid grid-cols-12 gap-2 px-6 py-3 bg-slate-50 text-slate-500 text-sm font-medium border-b border-slate-100">
+          {/* 桌面端表头 */}
+          <div className="hidden md:grid grid-cols-12 gap-2 px-6 py-3 bg-slate-50 text-slate-500 text-sm font-medium border-b border-slate-100">
             <div className="col-span-1 text-center">排名</div>
             <div className="col-span-2">学号</div>
             <div className="col-span-3">姓名</div>
@@ -317,50 +317,95 @@ export default function Home() {
                 {searchKeyword ? '未找到匹配的学生' : '暂无学生数据'}
               </div>
             ) : (
-              (searchKeyword ? filteredStudents : restStudents).map((student, index) => (
-                <div
-                  key={student.id}
-                  className="grid grid-cols-12 gap-2 px-6 py-4 items-center hover:bg-blue-50/50 transition-colors group"
-                >
-                  <div className="col-span-1 text-center">
-                    {student.ranking <= 3 ? (
-                      <span className="text-2xl">
-                        {student.ranking === 1 && '🥇'}
-                        {student.ranking === 2 && '🥈'}
-                        {student.ranking === 3 && '🥉'}
+              (searchKeyword ? filteredStudents : restStudents).map((student) => (
+                <div key={student.id}>
+                  {/* 移动端卡片布局 */}
+                  <div className="md:hidden p-4 hover:bg-blue-50/50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      {/* 排名 */}
+                      <div className="flex-shrink-0">
+                        {student.ranking <= 3 ? (
+                          <span className="text-2xl">
+                            {student.ranking === 1 && '🥇'}
+                            {student.ranking === 2 && '🥈'}
+                            {student.ranking === 3 && '🥉'}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-600 font-semibold text-sm shadow-sm">
+                            {student.ranking}
+                          </span>
+                        )}
+                      </div>
+                      {/* 信息 */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-slate-700 font-medium truncate">{student.name}</span>
+                          <span
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium flex-shrink-0"
+                            style={{ backgroundColor: student.rank_color + '15', color: student.rank_color }}
+                          >
+                            {student.rank_icon} {student.rank_name}
+                          </span>
+                        </div>
+                        <div className="text-slate-400 text-xs mt-1">学号 {student.student_no}</div>
+                      </div>
+                      {/* 积分和操作 */}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-lg font-bold text-slate-700">{student.score}</span>
+                        <Link
+                          href={'/student/' + student.id}
+                          className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg text-white"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 桌面端表格布局 */}
+                  <div className="hidden md:grid grid-cols-12 gap-2 px-6 py-4 items-center hover:bg-blue-50/50 transition-colors group">
+                    <div className="col-span-1 text-center">
+                      {student.ranking <= 3 ? (
+                        <span className="text-2xl">
+                          {student.ranking === 1 && '🥇'}
+                          {student.ranking === 2 && '🥈'}
+                          {student.ranking === 3 && '🥉'}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-600 font-semibold text-sm shadow-sm">
+                          {student.ranking}
+                        </span>
+                      )}
+                    </div>
+                    <div className="col-span-2 text-slate-400 text-sm font-mono">{student.student_no}</div>
+                    <div className="col-span-3">
+                      <span className="text-slate-700 font-medium">{student.name}</span>
+                    </div>
+                    <div className="col-span-2 text-center">
+                      <span className="text-xl font-bold text-slate-700">{student.score}</span>
+                    </div>
+                    <div className="col-span-2 text-center">
+                      <span
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium shadow-sm"
+                        style={{ backgroundColor: student.rank_color + '15', color: student.rank_color }}
+                      >
+                        <span>{student.rank_icon}</span>
+                        <span>{student.rank_name}</span>
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 text-slate-600 font-semibold text-sm shadow-sm">
-                        {student.ranking}
-                      </span>
-                    )}
-                  </div>
-                  <div className="col-span-2 text-slate-400 text-sm font-mono">{student.student_no}</div>
-                  <div className="col-span-3">
-                    <span className="text-slate-700 font-medium">{student.name}</span>
-                  </div>
-                  <div className="col-span-2 text-center">
-                    <span className="text-xl font-bold text-slate-700">{student.score}</span>
-                  </div>
-                  <div className="col-span-2 text-center">
-                    <span
-                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium shadow-sm"
-                      style={{ backgroundColor: student.rank_color + '15', color: student.rank_color }}
-                    >
-                      <span>{student.rank_icon}</span>
-                      <span>{student.rank_name}</span>
-                    </span>
-                  </div>
-                  <div className="col-span-2 text-center">
-                    <Link
-                      href={'/student/' + student.id}
-                      className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 rounded-lg text-white text-sm font-medium transition-all shadow-md shadow-blue-200/50 hover:shadow-lg"
-                    >
-                      详情
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </Link>
+                    </div>
+                    <div className="col-span-2 text-center">
+                      <Link
+                        href={'/student/' + student.id}
+                        className="inline-flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 rounded-lg text-white text-sm font-medium transition-all shadow-md shadow-blue-200/50 hover:shadow-lg"
+                      >
+                        详情
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ))
@@ -386,29 +431,29 @@ export default function Home() {
       {/* 随机点名弹窗 */}
       {showRandomModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl text-center">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-md shadow-2xl text-center">
             {/* 标题 */}
-            <div className="mb-6">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-200/50">
-                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-3 sm:mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-200/50">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-slate-800">随机点名</h3>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800">随机点名</h3>
             </div>
 
             {/* 滚动名字 */}
-            <div className={`py-8 px-4 rounded-2xl mb-6 ${isRolling ? 'bg-gradient-to-r from-purple-100 to-pink-100' : 'bg-gradient-to-r from-emerald-100 to-teal-100'}`}>
-              <div className={`text-5xl font-bold ${isRolling ? 'text-purple-600 animate-pulse' : 'text-emerald-600'}`}>
+            <div className={`py-6 sm:py-8 px-4 rounded-2xl mb-4 sm:mb-6 ${isRolling ? 'bg-gradient-to-r from-purple-100 to-pink-100' : 'bg-gradient-to-r from-emerald-100 to-teal-100'}`}>
+              <div className={`text-3xl sm:text-5xl font-bold ${isRolling ? 'text-purple-600 animate-pulse' : 'text-emerald-600'}`}>
                 {rollingName || '准备中...'}
               </div>
               {selectedStudent && !isRolling && (
-                <div className="mt-4 space-y-2">
-                  <div className="text-slate-500">学号: {selectedStudent.student_no}</div>
-                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm" style={{ backgroundColor: selectedStudent.rank_color + '20', color: selectedStudent.rank_color }}>
+                <div className="mt-3 sm:mt-4 space-y-2">
+                  <div className="text-slate-500 text-sm sm:text-base">学号: {selectedStudent.student_no}</div>
+                  <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs sm:text-sm" style={{ backgroundColor: selectedStudent.rank_color + '20', color: selectedStudent.rank_color }}>
                     {selectedStudent.rank_icon} {selectedStudent.rank_name}
                   </div>
-                  <div className="text-slate-600">当前积分: <span className="font-bold text-lg">{selectedStudent.score}</span></div>
+                  <div className="text-slate-600 text-sm sm:text-base">当前积分: <span className="font-bold text-base sm:text-lg">{selectedStudent.score}</span></div>
                 </div>
               )}
             </div>
@@ -418,7 +463,7 @@ export default function Home() {
               {!isRolling && (
                 <button
                   onClick={startRandomPick}
-                  className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-xl hover:shadow-lg transition-all"
+                  className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-xl hover:shadow-lg transition-all text-sm sm:text-base"
                 >
                   再来一次
                 </button>
@@ -426,7 +471,7 @@ export default function Home() {
               <button
                 onClick={closeRandomModal}
                 disabled={isRolling}
-                className={`flex-1 py-3 rounded-xl font-medium transition-all ${isRolling ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                className={`flex-1 py-3 rounded-xl font-medium transition-all text-sm sm:text-base ${isRolling ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
               >
                 {isRolling ? '抽取中...' : '关闭'}
               </button>
