@@ -232,7 +232,7 @@ export const adminApi = {
       body: JSON.stringify(data),
     }),
 
-  updateRank: (password: string, id: number, data: { name: string; min_score: number; color: string; icon: string }) =>
+  updateRank: (password: string, id: number, data: Partial<{ name: string; min_score: number; color: string; icon: string }>) =>
     adminRequest<{ data: Rank }>(`/admin/ranks/${id}`, password, {
       method: 'PUT',
       body: JSON.stringify(data),
