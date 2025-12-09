@@ -19,6 +19,10 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
       RESET_PASSWORD: ${RESET_PASSWORD:-wsx547547}
       SERVER_PORT: 8080
+    dns:
+      - 223.5.5.5
+      - 114.114.114.114
+      - 8.8.8.8
     networks:
       - 1panel-network
       - default
@@ -36,6 +40,10 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    dns:
+      - 223.5.5.5
+      - 114.114.114.114
+      - 8.8.8.8
     networks:
       - default
 
