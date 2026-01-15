@@ -13,7 +13,7 @@ services:
     environment:
       DB_HOST: 172.18.0.3
       DB_PORT: ${DB_PORT:-3306}
-      DB_USER: ${DB_USER:-root}
+      DB_USER: score_db
       DB_PASSWORD: ${DB_PASSWORD:-123456}
       DB_NAME: ${DB_NAME:-score_db}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}

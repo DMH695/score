@@ -11,7 +11,10 @@
       "Bash(git commit:*)",
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git -C H:/score add:*)",
+      "Bash(git -C H:/score commit -m \"fix: 使用正确的数据库用户名 score_db\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\")",
+      "Bash(git -C H:/score push)"
     ],
     "deny": [],
     "ask": []
