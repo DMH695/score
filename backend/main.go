@@ -9,6 +9,7 @@ import (
 	"score-backend/middleware"
 
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -26,6 +27,9 @@ func main() {
 
 	// 创建 Gin 引擎
 	r := gin.Default()
+
+	// 启用 Gzip 压缩
+	r.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	// CORS 配置
 	r.Use(cors.New(cors.Config{
